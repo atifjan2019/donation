@@ -7,7 +7,7 @@
     <title>{{ $header ?? 'My Dashboard' }} — DonateHeart</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-gray-50">
+<body class="font-sans antialiased bg-gray-50/50">
 <div x-data="{ sidebarOpen: false }" class="min-h-screen flex">
 
     {{-- Mobile overlay --}}
@@ -18,26 +18,26 @@
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
-         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"></div>
+         class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-40 lg:hidden"></div>
 
     {{-- ── Sidebar ──────────────────────────────────────────── --}}
     <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
            class="fixed inset-y-0 left-0 z-50 w-64 flex flex-col
-                  bg-gradient-to-b from-slate-900 via-slate-900 to-gray-950
-                  transform transition-transform duration-250 ease-out
+                  bg-gradient-to-b from-brand-950 via-brand-950 to-brand-900
+                  transform transition-transform duration-300 ease-out
                   lg:translate-x-0 lg:static lg:inset-auto lg:z-auto">
 
         {{-- Logo --}}
         <div class="flex items-center gap-3 px-5 h-16 shrink-0 border-b border-white/5">
             <a href="{{ route('campaigns.index') }}" class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-700 rounded-lg flex items-center justify-center shadow-lg">
+                <div class="w-8 h-8 bg-gradient-to-br from-brand-400 to-brand-600 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
                     <svg class="w-4.5 h-4.5 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-display font-bold text-white leading-none">DonateHeart</p>
-                    <p class="text-[10px] text-white/40 font-medium mt-0.5">Donor Portal</p>
+                    <p class="text-sm font-display font-bold text-white leading-none tracking-tight">DonateHeart</p>
+                    <p class="text-[10px] text-brand-400/60 font-medium mt-0.5">Donor Portal</p>
                 </div>
             </a>
         </div>
@@ -108,17 +108,17 @@
         {{-- User footer --}}
         <div class="px-3 py-3 border-t border-white/5 shrink-0">
             <div class="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-white/5 transition-colors">
-                <div class="w-8 h-8 bg-gradient-to-br from-accent-500 to-accent-700 text-white rounded-full flex items-center justify-center font-bold text-xs shrink-0">
+                <div class="w-8 h-8 bg-gradient-to-br from-accent-400 to-accent-600 text-white rounded-full flex items-center justify-center font-bold text-xs shrink-0 shadow-md shadow-accent-500/20">
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-xs font-semibold text-white truncate">{{ Auth::user()->name }}</p>
-                    <p class="text-[11px] text-white/40 truncate">{{ Auth::user()->email }}</p>
+                    <p class="text-[11px] text-white/35 truncate">{{ Auth::user()->email }}</p>
                 </div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" title="Log out"
-                            class="p-1.5 text-white/30 hover:text-white/80 hover:bg-white/10 rounded-lg transition-colors">
+                            class="p-1.5 text-white/25 hover:text-white/80 hover:bg-white/10 rounded-lg transition-all duration-200">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
@@ -132,7 +132,7 @@
     <div class="flex-1 flex flex-col min-w-0">
 
         {{-- Top bar --}}
-        <header class="bg-white border-b border-gray-100 h-16 flex items-center px-4 sm:px-6 lg:px-8 shrink-0 shadow-sm shadow-gray-100/60">
+        <header class="bg-white/80 backdrop-blur-xl border-b border-gray-100/80 h-16 flex items-center px-4 sm:px-6 lg:px-8 shrink-0 shadow-sm shadow-gray-100/50">
             <button @click="sidebarOpen = true"
                     class="lg:hidden p-2 -ml-2 mr-3 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,9 +140,9 @@
                 </svg>
             </button>
             <div class="flex-1 flex items-center justify-between">
-                <h1 class="text-base font-display font-semibold text-gray-900">{{ $header ?? 'Dashboard' }}</h1>
+                <h1 class="text-base font-display font-bold text-gray-900 tracking-tight">{{ $header ?? 'Dashboard' }}</h1>
                 <a href="{{ route('donations.create') }}"
-                   class="hidden sm:inline-flex btn-primary !py-2 !px-4 text-xs">
+                   class="hidden sm:inline-flex btn-primary !py-2 !px-4 text-xs !rounded-xl">
                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                     </svg>
@@ -152,7 +152,7 @@
         </header>
 
         @if(session('status'))
-            <div class="mx-4 sm:mx-6 lg:mx-8 mt-4">
+            <div class="mx-4 sm:mx-6 lg:mx-8 mt-4 animate-fade-up">
                 <div class="alert-success">
                     <svg class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
