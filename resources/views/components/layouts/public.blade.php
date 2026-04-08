@@ -33,12 +33,13 @@
                         <a href="{{ route('donations.create') }}" class="nav-link px-3 rounded-3 {{ request()->routeIs('donations.create') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}">Donate Now</a>
                     </li>
                     @auth
-                        <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link px-3 rounded-3">My Dashboard</a>
-                        </li>
                         @if(auth()->user()->hasRole('admin'))
                             <li class="nav-item">
-                                <a href="{{ route('admin.dashboard') }}" class="nav-link px-3 rounded-3">Admin</a>
+                                <a href="{{ route('admin.dashboard') }}" class="nav-link px-3 rounded-3 {{ request()->routeIs('admin.*') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}">Admin Panel</a>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a href="{{ route('dashboard') }}" class="nav-link px-3 rounded-3">My Dashboard</a>
                             </li>
                         @endif
                     @endauth
@@ -62,7 +63,7 @@
                                     <div class="fw-bold small">{{ Auth::user()->name }}</div>
                                     <div class="text-muted" style="font-size:11px">{{ Auth::user()->email }}</div>
                                 </li>
-                                <li><a href="{{ route('dashboard') }}" class="dropdown-item rounded-3 py-2 small">Dashboard</a></li>
+                                <li><a href="{{ auth()->user()->hasRole('admin') ? route('admin.dashboard') : route('dashboard') }}" class="dropdown-item rounded-3 py-2 small">Dashboard</a></li>
                                 <li><a href="{{ route('profile.edit') }}" class="dropdown-item rounded-3 py-2 small">Profile</a></li>
                                 <li><hr class="dropdown-divider my-1"></li>
                                 <li>
