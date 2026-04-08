@@ -1,104 +1,61 @@
 <x-layouts.admin>
     <x-slot:header>Donations</x-slot:header>
 
-    {{-- ── Filters ───────────────────────────────────────────── --}}
-    <div class="card p-5 mb-6">
-        <form method="GET" action="{{ route('admin.donations.index') }}"
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-                <label class="form-label !text-xs !text-gray-500">From Date</label>
-                <input type="date" name="from" value="{{ request('from') }}" class="form-input">
-            </div>
-            <div>
-                <label class="form-label !text-xs !text-gray-500">To Date</label>
-                <input type="date" name="to" value="{{ request('to') }}" class="form-input">
-            </div>
-            <div>
-                <label class="form-label !text-xs !text-gray-500">Status</label>
+    {{-- Filters --}}
+    <div class="card p-4 mb-4">
+        <form method="GET" action="{{ route('admin.donations.index') }}" class="row g-3">
+            <div class="col-sm-6 col-lg-3"><label class="form-label small text-muted fw-semibold">From</label><input type="date" name="from" value="{{ request('from') }}" class="form-control"></div>
+            <div class="col-sm-6 col-lg-3"><label class="form-label small text-muted fw-semibold">To</label><input type="date" name="to" value="{{ request('to') }}" class="form-control"></div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="form-label small text-muted fw-semibold">Status</label>
                 <select name="status" class="form-select">
                     <option value="">All Statuses</option>
-                    <option value="completed"  {{ request('status') === 'completed'  ? 'selected' : '' }}>Completed</option>
-                    <option value="pending"    {{ request('status') === 'pending'    ? 'selected' : '' }}>Pending</option>
-                    <option value="failed"     {{ request('status') === 'failed'     ? 'selected' : '' }}>Failed</option>
-                    <option value="refunded"   {{ request('status') === 'refunded'   ? 'selected' : '' }}>Refunded</option>
+                    @foreach(['completed','pending','failed','refunded'] as $s) <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option> @endforeach
                 </select>
             </div>
-            <div>
-                <label class="form-label !text-xs !text-gray-500">Donor</label>
-                <input type="text" name="donor" value="{{ request('donor') }}"
-                       placeholder="Search name or email" class="form-input">
-            </div>
-            <div class="sm:col-span-2 lg:col-span-4 flex flex-wrap gap-3">
-                <button type="submit" class="btn-primary !py-2 !px-5 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    Filter
-                </button>
-                <a href="{{ route('admin.donations.index') }}" class="btn-ghost !py-2 !px-5 text-sm border border-gray-200">
-                    Reset
-                </a>
-                <a href="{{ route('admin.donations.index', array_merge(request()->query(), ['export' => 'csv'])) }}"
-                   class="btn-secondary !py-2 !px-5 text-sm ml-auto">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    Export CSV
-                </a>
+            <div class="col-sm-6 col-lg-3"><label class="form-label small text-muted fw-semibold">Donor</label><input type="text" name="donor" value="{{ request('donor') }}" placeholder="Search name or email" class="form-control"></div>
+            <div class="col-12 d-flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-gradient btn-sm">Filter</button>
+                <a href="{{ route('admin.donations.index') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
+                <a href="{{ route('admin.donations.index', array_merge(request()->query(), ['export' => 'csv'])) }}" class="btn btn-gradient-accent btn-sm ms-auto">Export CSV</a>
             </div>
         </form>
     </div>
 
-    {{-- ── Table ─────────────────────────────────────────────── --}}
+    {{-- Table --}}
     <div class="card overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 border-b border-gray-100">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-light">
                     <tr>
-                        <th class="th">#ID</th>
-                        <th class="th">Donor</th>
-                        <th class="th">Campaign</th>
-                        <th class="th-right">Amount</th>
-                        <th class="th-center">Status</th>
-                        <th class="th">Date</th>
-                        <th class="th-center">Actions</th>
+                        <th class="text-muted text-uppercase fw-bold" style="font-size:11px">#ID</th>
+                        <th class="text-muted text-uppercase fw-bold" style="font-size:11px">Donor</th>
+                        <th class="text-muted text-uppercase fw-bold" style="font-size:11px">Campaign</th>
+                        <th class="text-muted text-uppercase fw-bold text-end" style="font-size:11px">Amount</th>
+                        <th class="text-muted text-uppercase fw-bold text-center" style="font-size:11px">Status</th>
+                        <th class="text-muted text-uppercase fw-bold" style="font-size:11px">Date</th>
+                        <th class="text-muted text-uppercase fw-bold text-center" style="font-size:11px">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody>
                     @forelse($donations as $donation)
-                        @php
-                            $statusMap = [
-                                'completed' => 'badge-green',
-                                'pending'   => 'badge-yellow',
-                                'failed'    => 'badge-red',
-                                'refunded'  => 'badge-gray',
-                            ];
-                        @endphp
-                        <tr class="hover:bg-gray-50/60 transition-colors">
-                            <td class="td font-mono text-xs text-gray-400">#{{ $donation->id }}</td>
-                            <td class="td">
-                                <p class="font-semibold text-gray-900 text-xs">{{ $donation->donor_name ?: ($donation->user?->name ?? 'Anonymous') }}</p>
-                                <p class="text-gray-400 text-xs mt-0.5">{{ $donation->donor_email ?: $donation->user?->email }}</p>
+                        @php $statusMap = ['completed'=>'bg-success-subtle text-success','pending'=>'bg-warning-subtle text-warning','failed'=>'bg-danger-subtle text-danger','refunded'=>'bg-secondary-subtle text-secondary']; @endphp
+                        <tr>
+                            <td class="font-monospace text-muted" style="font-size:12px">#{{ $donation->id }}</td>
+                            <td>
+                                <div class="fw-semibold" style="font-size:12px">{{ $donation->donor_name ?: ($donation->user?->name ?? 'Anonymous') }}</div>
+                                <div class="text-muted" style="font-size:11px">{{ $donation->donor_email ?: $donation->user?->email }}</div>
                             </td>
-                            <td class="td text-gray-500 max-w-[140px] truncate">
-                                {{ $donation->campaign?->title ?? '—' }}
-                            </td>
-                            <td class="td-right font-bold text-gray-900">${{ number_format($donation->amount / 100, 2) }}</td>
-                            <td class="td-center">
-                                <span class="badge {{ $statusMap[$donation->status] ?? 'badge-gray' }}">
-                                    {{ ucfirst($donation->status) }}
-                                </span>
-                            </td>
-                            <td class="td text-gray-400 text-xs whitespace-nowrap">{{ $donation->created_at->format('M d, Y') }}</td>
-                            <td class="td-center">
-                                <div class="flex items-center justify-center gap-3">
-                                    <a href="{{ route('admin.donations.show', $donation) }}"
-                                       class="text-brand-600 hover:text-brand-800 font-semibold text-xs transition-colors">
-                                        View
-                                    </a>
+                            <td class="text-muted text-truncate" style="max-width:140px">{{ $donation->campaign?->title ?? '—' }}</td>
+                            <td class="text-end fw-bold">${{ number_format($donation->amount / 100, 2) }}</td>
+                            <td class="text-center"><span class="badge rounded-pill {{ $statusMap[$donation->status] ?? 'bg-light text-secondary' }}">{{ ucfirst($donation->status) }}</span></td>
+                            <td class="text-muted" style="font-size:12px;white-space:nowrap">{{ $donation->created_at->format('M d, Y') }}</td>
+                            <td class="text-center">
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <a href="{{ route('admin.donations.show', $donation) }}" class="text-primary fw-semibold text-decoration-none" style="font-size:12px">View</a>
                                     @if($donation->status === 'completed')
-                                        <form method="POST" action="{{ route('admin.donations.refund', $donation) }}"
-                                              class="inline" onsubmit="return confirm('Refund this donation?')">
-                                            @csrf @method('PATCH')
-                                            <button type="submit" class="text-red-500 hover:text-red-700 font-semibold text-xs transition-colors">
-                                                Refund
-                                            </button>
+                                        <form method="POST" action="{{ route('admin.donations.refund', $donation) }}" class="d-inline" onsubmit="return confirm('Refund this donation?')">@csrf @method('PATCH')
+                                            <button class="btn btn-sm btn-link text-danger p-0 fw-semibold text-decoration-none" style="font-size:12px">Refund</button>
                                         </form>
                                     @endif
                                 </div>
@@ -106,13 +63,9 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="td text-center py-16">
-                                <div class="flex flex-col items-center gap-3 text-gray-400">
-                                    <svg class="w-10 h-10 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                    </svg>
-                                    No donations found
-                                </div>
+                            <td colspan="7" class="text-center py-5">
+                                <svg class="mb-2" width="40" height="40" fill="none" stroke="#cbd5e1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                <p class="text-muted">No donations found</p>
                             </td>
                         </tr>
                     @endforelse
@@ -120,9 +73,7 @@
             </table>
         </div>
         @if($donations->hasPages())
-            <div class="px-5 py-4 border-t border-gray-100 bg-gray-50/50">
-                {{ $donations->withQueryString()->links() }}
-            </div>
+            <div class="p-3 border-top">{{ $donations->withQueryString()->links() }}</div>
         @endif
     </div>
 </x-layouts.admin>

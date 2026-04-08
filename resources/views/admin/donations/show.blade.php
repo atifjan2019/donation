@@ -1,76 +1,66 @@
 <x-layouts.admin>
     <x-slot:header>Donation #{{ $donation->id }}</x-slot:header>
 
-    <div class="max-w-3xl">
-        <a href="{{ route('admin.donations.index') }}"
-           class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-brand-600 transition-colors group mb-6">
-            <svg class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
+    <div style="max-width:720px">
+        <a href="{{ route('admin.donations.index') }}" class="text-decoration-none text-muted small d-inline-flex align-items-center gap-1 mb-4">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             Back to donations
         </a>
 
-        <div class="card overflow-hidden shadow-md">
+        <div class="card overflow-hidden shadow">
             {{-- Header --}}
-            <div class="bg-gradient-to-r from-brand-600 to-accent-600 p-6 md:p-8">
-                <div class="flex items-start justify-between">
+            <div class="p-4 p-md-5" style="background:linear-gradient(135deg,#4f46e5,#818cf8,#fbbf24)">
+                <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="text-white/70 text-xs font-semibold uppercase tracking-wider mb-1">Donation Amount</p>
-                        <p class="text-4xl font-display font-bold text-white">${{ number_format($donation->amount / 100, 2) }}</p>
-                        <p class="text-white/60 text-sm mt-1">{{ strtoupper($donation->currency) }}</p>
+                        <div class="text-uppercase fw-bold" style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.1em">Donation Amount</div>
+                        <div class="font-display fw-bold text-white display-6">${{ number_format($donation->amount / 100, 2) }}</div>
+                        <div style="color:rgba(255,255,255,0.5);font-size:13px" class="mt-1">{{ strtoupper($donation->currency) }}</div>
                     </div>
                     @php
-                        $statusMap = [
-                            'completed' => 'bg-emerald-400/20 text-emerald-100 border border-emerald-400/30',
-                            'pending'   => 'bg-amber-400/20 text-amber-100 border border-amber-400/30',
-                            'failed'    => 'bg-red-400/20 text-red-100 border border-red-400/30',
-                            'refunded'  => 'bg-white/10 text-white/60 border border-white/20',
-                        ];
+                        $statusMap = ['completed'=>'background:rgba(16,185,129,0.2);color:#a7f3d0;border:1px solid rgba(16,185,129,0.3)','pending'=>'background:rgba(245,158,11,0.2);color:#fde68a;border:1px solid rgba(245,158,11,0.3)','failed'=>'background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)','refunded'=>'background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.2)'];
                     @endphp
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide {{ $statusMap[$donation->status] ?? 'bg-white/10 text-white/60' }}">
-                        {{ ucfirst($donation->status) }}
-                    </span>
+                    <span class="badge rounded-pill px-3 py-2 fw-bold text-uppercase" style="{{ $statusMap[$donation->status] ?? '' }};font-size:11px;letter-spacing:0.05em">{{ ucfirst($donation->status) }}</span>
                 </div>
                 @if($donation->transaction_id)
-                    <p class="text-white/50 text-xs mt-4 font-mono">TXN: {{ $donation->transaction_id }}</p>
+                    <div class="font-monospace mt-3" style="font-size:12px;color:rgba(255,255,255,0.4)">TXN: {{ $donation->transaction_id }}</div>
                 @endif
             </div>
 
-            <div class="p-6 md:p-8">
-                <div class="grid sm:grid-cols-2 gap-6">
-                    <div class="space-y-5">
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Donor</p>
-                            <p class="text-sm font-semibold text-gray-900">{{ $donation->donor_name ?: ($donation->user?->name ?? 'Anonymous') }}</p>
-                            <p class="text-sm text-gray-500">{{ $donation->donor_email ?: $donation->user?->email }}</p>
+            <div class="card-body p-4 p-md-5">
+                <div class="row g-4">
+                    <div class="col-sm-6">
+                        <div class="mb-4">
+                            <div class="text-uppercase fw-bold text-muted mb-1" style="font-size:11px;letter-spacing:0.1em">Donor</div>
+                            <div class="fw-semibold small">{{ $donation->donor_name ?: ($donation->user?->name ?? 'Anonymous') }}</div>
+                            <div class="text-muted small">{{ $donation->donor_email ?: $donation->user?->email }}</div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="text-uppercase fw-bold text-muted mb-1" style="font-size:11px;letter-spacing:0.1em">Campaign</div>
+                            <div class="fw-semibold small">{{ $donation->campaign?->title ?? 'General' }}</div>
                         </div>
                         <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Campaign</p>
-                            <p class="text-sm font-semibold text-gray-900">{{ $donation->campaign?->title ?? 'General' }}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Payment Method</p>
-                            <p class="text-sm font-semibold text-gray-900 capitalize">{{ $donation->payment_method }}</p>
+                            <div class="text-uppercase fw-bold text-muted mb-1" style="font-size:11px;letter-spacing:0.1em">Payment Method</div>
+                            <div class="fw-semibold small text-capitalize">{{ $donation->payment_method }}</div>
                         </div>
                     </div>
-                    <div class="space-y-5">
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Type</p>
-                            <p class="text-sm font-semibold text-gray-900 capitalize">{{ str_replace('_', ' ', $donation->type) }}</p>
+                    <div class="col-sm-6">
+                        <div class="mb-4">
+                            <div class="text-uppercase fw-bold text-muted mb-1" style="font-size:11px;letter-spacing:0.1em">Type</div>
+                            <div class="fw-semibold small text-capitalize">{{ str_replace('_', ' ', $donation->type) }}</div>
                         </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Date</p>
-                            <p class="text-sm font-semibold text-gray-900">{{ $donation->created_at->format('M d, Y \a\t H:i') }}</p>
+                        <div class="mb-4">
+                            <div class="text-uppercase fw-bold text-muted mb-1" style="font-size:11px;letter-spacing:0.1em">Date</div>
+                            <div class="fw-semibold small">{{ $donation->created_at->format('M d, Y \a\t H:i') }}</div>
                         </div>
                         @if($donation->receipt)
-                            <div>
-                                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Receipt #</p>
-                                <p class="text-sm font-semibold text-gray-900 font-mono">{{ $donation->receipt->receipt_number }}</p>
-                            </div>
+                        <div class="mb-4">
+                            <div class="text-uppercase fw-bold text-muted mb-1" style="font-size:11px;letter-spacing:0.1em">Receipt #</div>
+                            <div class="fw-semibold small font-monospace">{{ $donation->receipt->receipt_number }}</div>
+                        </div>
                         @endif
                         <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Anonymous</p>
-                            <span class="badge {{ $donation->is_anonymous ? 'badge-yellow' : 'badge-gray' }}">
+                            <div class="text-uppercase fw-bold text-muted mb-1" style="font-size:11px;letter-spacing:0.1em">Anonymous</div>
+                            <span class="badge rounded-pill {{ $donation->is_anonymous ? 'bg-warning-subtle text-warning' : 'bg-light text-secondary' }}">
                                 {{ $donation->is_anonymous ? 'Yes — Hidden' : 'No — Visible' }}
                             </span>
                         </div>
@@ -78,15 +68,12 @@
                 </div>
 
                 @if($donation->status === 'completed')
-                    <div class="mt-8 pt-6 border-t border-gray-100">
-                        <p class="text-xs text-gray-400 mb-3 font-medium">Danger Zone</p>
-                        <form method="POST" action="{{ route('admin.donations.refund', $donation) }}"
-                              onsubmit="return confirm('Are you sure you want to refund this donation? This cannot be undone.')">
+                    <div class="border-top mt-4 pt-4">
+                        <div class="text-muted small mb-2">Danger Zone</div>
+                        <form method="POST" action="{{ route('admin.donations.refund', $donation) }}" onsubmit="return confirm('Are you sure you want to refund this donation? This cannot be undone.')">
                             @csrf @method('PATCH')
-                            <button type="submit" class="btn-danger">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-                                </svg>
+                            <button type="submit" class="btn btn-outline-danger btn-sm d-inline-flex align-items-center gap-1">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
                                 Mark as Refunded
                             </button>
                         </form>

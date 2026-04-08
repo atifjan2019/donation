@@ -5,76 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'DonateHeart') }}</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased">
-<div class="min-h-screen flex">
+<body>
+<div class="d-flex min-vh-100">
 
-    {{-- ── Left decorative panel ────────────────────────────── --}}
-    <div class="hidden lg:flex lg:w-[45%] xl:w-1/2 relative overflow-hidden bg-gradient-to-br from-brand-700 via-brand-600 to-accent-700">
-        {{-- Geometric decorations --}}
-        <div class="absolute inset-0">
-            <div class="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3"></div>
-            <div class="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full translate-y-1/2 -translate-x-1/4"></div>
-            <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 scale-150"></div>
+    {{-- Left panel --}}
+    <div class="d-none d-lg-flex hero-gradient position-relative overflow-hidden" style="width:45%">
+        <div class="hero-pattern"></div>
+        <div class="hero-orb animate-float" style="width:320px;height:320px;top:-100px;right:-80px;background:rgba(99,102,241,0.1)"></div>
+        <div class="hero-orb animate-float" style="width:400px;height:400px;bottom:-150px;left:-100px;background:rgba(245,158,11,0.08);animation-delay:1s"></div>
+
+        {{-- Floating cards --}}
+        <div class="glass-dark rounded-4 p-3 text-white position-absolute animate-float" style="top:60px;right:40px;border:1px solid rgba(255,255,255,0.1)">
+            <div style="font-size:11px;color:rgba(255,255,255,0.45)">Total Raised</div>
+            <div class="font-display fw-bold fs-4 mt-1">$2.4M+</div>
+        </div>
+        <div class="glass-dark rounded-4 p-3 text-white position-absolute animate-float" style="bottom:100px;right:50px;border:1px solid rgba(255,255,255,0.1);animation-delay:1.5s">
+            <div style="font-size:11px;color:rgba(255,255,255,0.45)">Happy Donors</div>
+            <div class="font-display fw-bold fs-4 mt-1">12,500+</div>
         </div>
 
-        {{-- Floating stats --}}
-        <div class="absolute top-16 right-10 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 text-white">
-            <p class="text-xs text-white/70 mb-1">Total Raised</p>
-            <p class="text-2xl font-display font-bold">$2.4M+</p>
-        </div>
-        <div class="absolute bottom-24 right-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 text-white">
-            <p class="text-xs text-white/70 mb-1">Happy Donors</p>
-            <p class="text-2xl font-display font-bold">12,500+</p>
-        </div>
-
-        {{-- Main content --}}
-        <div class="relative z-10 flex flex-col justify-center px-10 xl:px-16 py-16">
-            <div class="flex items-center gap-3 mb-10">
-                <div class="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
+        <div class="d-flex flex-column justify-content-center px-5 py-5 position-relative" style="z-index:5">
+            <div class="d-flex align-items-center gap-3 mb-5">
+                <div class="d-flex align-items-center justify-content-center rounded-3 shadow" style="width:44px;height:44px;background:linear-gradient(135deg,#818cf8,#4f46e5)">
+                    <svg width="24" height="24" fill="#fff" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                 </div>
-                <span class="text-2xl font-display font-bold text-white">DonateHeart</span>
+                <span class="font-display fw-bold fs-4 text-white">DonateHeart</span>
             </div>
 
-            <h2 class="text-4xl xl:text-5xl font-display font-bold text-white leading-[1.15] mb-6">
-                Every donation<br/>
-                creates a<br/>
-                <span class="text-brand-200">ripple of change.</span>
+            <h2 class="font-display fw-bold text-white display-5 mb-4" style="line-height:1.1">
+                Every donation<br>creates a<br><span class="text-gradient">ripple of change.</span>
             </h2>
-
-            <p class="text-brand-100 text-lg leading-relaxed max-w-sm mb-10">
+            <p class="lead" style="color:rgba(199,210,254,0.6);max-width:360px">
                 Join thousands of generous donors making a real difference in people's lives around the world.
             </p>
-
-            {{-- Trust indicators --}}
-            <div class="flex flex-col gap-3">
-                @foreach ([['✓', 'Verified campaigns with transparent goals'], ['✓', 'Secure payments via Stripe & PayPal'], ['✓', 'Instant tax receipts for every donation']] as $item)
-                    <div class="flex items-center gap-3 text-white/80 text-sm">
-                        <span class="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0">{{ $item[0] }}</span>
-                        {{ $item[1] }}
+            <div class="d-flex flex-column gap-3 mt-4">
+                @foreach(['Verified campaigns with transparent goals','Secure payments via Stripe & PayPal','Instant tax receipts for every donation'] as $t)
+                    <div class="d-flex align-items-center gap-2 small" style="color:rgba(255,255,255,0.6)">
+                        <span class="d-flex align-items-center justify-content-center rounded-circle" style="width:24px;height:24px;background:rgba(99,102,241,0.2);font-size:11px;color:#a5b4fc">✓</span>
+                        {{ $t }}
                     </div>
                 @endforeach
             </div>
         </div>
     </div>
 
-    {{-- ── Right form panel ─────────────────────────────────── --}}
-    <div class="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-white">
-        {{-- Mobile logo --}}
-        <div class="lg:hidden flex items-center gap-2.5 mb-8">
-            <div class="w-9 h-9 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center shadow-sm">
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
+    {{-- Right form panel --}}
+    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center p-4 p-lg-5" style="background:#fafbfd">
+        <div class="d-lg-none d-flex align-items-center gap-2 mb-4">
+            <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm" style="width:36px;height:36px;background:linear-gradient(135deg,#4f46e5,#4338ca)">
+                <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             </div>
-            <span class="text-xl font-display font-bold text-gray-900">Donate<span class="text-brand-600">Heart</span></span>
+            <span class="font-display fw-bold fs-5">Donate<span class="text-gradient">Heart</span></span>
         </div>
-
-        <div class="w-full max-w-md">
+        <div class="w-100 animate-fade-up" style="max-width:420px">
             {{ $slot }}
         </div>
     </div>
