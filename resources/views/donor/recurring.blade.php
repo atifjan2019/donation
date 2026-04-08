@@ -1,4 +1,4 @@
-<x-donor-layout>
+<x-layouts.donor>
     <x-slot:header>Recurring Donations</x-slot:header>
 
     <div class="card overflow-hidden">
@@ -85,4 +85,4 @@
             </div>
         @endif
     </div>
-</x-donor-layout>
+</x-layouts.donor>

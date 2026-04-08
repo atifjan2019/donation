@@ -1,4 +1,4 @@
-<x-donor-layout>
+<x-layouts.donor>
     <x-slot:header>Overview</x-slot:header>
 
     {{-- ── Greeting ──────────────────────────────────────────── --}}
@@ -99,4 +99,4 @@
             <p class="text-sm text-gray-500 mt-1">Download your donation receipts</p>
         </a>
     </div>
-</x-donor-layout>
+</x-layouts.donor>

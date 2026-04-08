@@ -1,4 +1,4 @@
-<x-donor-layout>
+<x-layouts.donor>
     <x-slot:header>Donation History</x-slot:header>
 
     {{-- ── Filters ───────────────────────────────────────────── --}}
@@ -95,4 +95,4 @@
             </div>
         @endif
     </div>
-</x-donor-layout>
+</x-layouts.donor>

@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-layouts.admin>
     <x-slot:header>Dashboard</x-slot:header>
 
     {{-- ── Stat cards ───────────────────────────────────────── --}}
@@ -195,4 +195,4 @@
             </div>
         </a>
     </div>
-</x-admin-layout>
+</x-layouts.admin>

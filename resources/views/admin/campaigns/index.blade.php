@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-layouts.admin>
     <x-slot:header>Campaigns</x-slot:header>
 
     <div class="flex items-center justify-between mb-6">
@@ -158,4 +158,4 @@
             </div>
         @endif
     </div>
-</x-admin-layout>
+</x-layouts.admin>

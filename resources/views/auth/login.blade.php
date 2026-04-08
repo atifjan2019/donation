@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-layouts.guest>
     <div class="mb-8">
         <h2 class="text-3xl font-display font-bold text-gray-900 leading-tight">Welcome back</h2>
         <p class="text-gray-500 mt-2 text-sm">Sign in to continue your giving journey.</p>
@@ -50,4 +50,4 @@
             </a>
         </p>
     </form>
-</x-guest-layout>
+</x-layouts.guest>

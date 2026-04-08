@@ -1,4 +1,4 @@
-<x-public-layout>
+<x-layouts.public>
     <x-slot:title>Make a Donation — DonateHeart</x-slot:title>
 
     <section class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -152,4 +152,4 @@
             </div>
         </div>
     </section>
-</x-public-layout>
+</x-layouts.public>

@@ -1,4 +1,4 @@
-<x-public-layout>
+<x-layouts.public>
     <x-slot:title>{{ $campaign->title }} — DonateHeart</x-slot:title>
 
     {{-- ── Breadcrumb ───────────────────────────────────────── --}}
@@ -125,4 +125,4 @@
             </div>
         </div>
     </section>
-</x-public-layout>
+</x-layouts.public>

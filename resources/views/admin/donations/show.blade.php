@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-layouts.admin>
     <x-slot:header>Donation #{{ $donation->id }}</x-slot:header>
 
     <div class="max-w-3xl">
@@ -95,4 +95,4 @@
             </div>
         </div>
     </div>
-</x-admin-layout>
+</x-layouts.admin>

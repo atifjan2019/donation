@@ -1,4 +1,4 @@
-<x-donor-layout>
+<x-layouts.donor>
     <x-slot:header>Tax Receipts</x-slot:header>
 
     {{-- ── Receipts table ────────────────────────────────────── --}}
@@ -76,4 +76,4 @@
             @endfor
         </div>
     </div>
-</x-donor-layout>
+</x-layouts.donor>

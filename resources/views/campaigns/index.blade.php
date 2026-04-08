@@ -1,4 +1,4 @@
-<x-public-layout>
+<x-layouts.public>
     <x-slot:title>Campaigns — DonateHeart</x-slot:title>
 
     {{-- ── Hero ─────────────────────────────────────────────── --}}
@@ -108,4 +108,4 @@
             @endif
         @endif
     </section>
-</x-public-layout>
+</x-layouts.public>

@@ -1,4 +1,4 @@
-<x-donor-layout>
+<x-layouts.donor>
     <x-slot:header>Profile Settings</x-slot:header>
 
     <div class="max-w-2xl space-y-6">
@@ -14,4 +14,4 @@
             @include('profile.partials.delete-user-form')
         </div>
     </div>
-</x-donor-layout>
+</x-layouts.donor>

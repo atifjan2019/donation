@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-layouts.admin>
     <x-slot:header>Donations</x-slot:header>
 
     {{-- ── Filters ───────────────────────────────────────────── --}}
@@ -125,4 +125,4 @@
             </div>
         @endif
     </div>
-</x-admin-layout>
+</x-layouts.admin>
