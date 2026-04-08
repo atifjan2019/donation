@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Campaign;
 use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class PublicCampaignController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(): JsonResponse|View
     {
         $campaigns = Campaign::query()
             ->with('categories:id,name,slug')
@@ -15,10 +16,16 @@ class PublicCampaignController extends Controller
             ->latest()
             ->paginate(12);
 
-        return response()->json($campaigns);
+        if (request()->expectsJson()) {
+            return response()->json($campaigns);
+        }
+
+        return view('campaigns.index', [
+            'campaigns' => $campaigns,
+        ]);
     }
 
-    public function show(string $slug): JsonResponse
+    public function show(string $slug): JsonResponse|View
     {
         $campaign = Campaign::query()
             ->with(['categories:id,name,slug'])
@@ -29,9 +36,16 @@ class PublicCampaignController extends Controller
             ? round(($campaign->raised_amount / $campaign->goal_amount) * 100, 2)
             : 0.0;
 
-        return response()->json([
+        if (request()->expectsJson()) {
+            return response()->json([
+                'campaign' => $campaign,
+                'progress_percent' => min($progress, 100),
+            ]);
+        }
+
+        return view('campaigns.show', [
             'campaign' => $campaign,
-            'progress_percent' => min($progress, 100),
+            'progressPercent' => min($progress, 100),
         ]);
     }
 }
