@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Donation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminDonationController extends Controller
 {
-    public function index(Request $request): JsonResponse|StreamedResponse
+    public function index(Request $request): JsonResponse|StreamedResponse|View
     {
         activity()
             ->causedBy($request->user())
@@ -65,20 +66,32 @@ class AdminDonationController extends Controller
             }, 'donations-export.csv', ['Content-Type' => 'text/csv']);
         }
 
-        return response()->json($query->latest()->paginate(25));
+        $donations = $query->latest()->paginate(25);
+
+        if ($request->expectsJson()) {
+            return response()->json($donations);
+        }
+
+        return view('admin.donations.index', compact('donations'));
     }
 
-    public function show(Donation $donation): JsonResponse
+    public function show(Request $request, Donation $donation): JsonResponse|View
     {
         activity()
             ->performedOn($donation)
             ->event('admin.donations.viewed')
             ->log('Admin viewed donation detail');
 
-        return response()->json($donation->load(['campaign', 'user', 'receipt']));
+        $donation->load(['campaign', 'user', 'receipt']);
+
+        if ($request->expectsJson()) {
+            return response()->json($donation);
+        }
+
+        return view('admin.donations.show', compact('donation'));
     }
 
-    public function refund(Request $request, Donation $donation): JsonResponse
+    public function refund(Request $request, Donation $donation): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         if ($donation->status !== 'completed') {
             abort(422, 'Only completed donations can be marked refunded.');
@@ -93,6 +106,10 @@ class AdminDonationController extends Controller
             ->performedOn($donation)
             ->event('admin.donations.refunded')
             ->log('Admin marked donation as refunded');
+
+        if (! $request->expectsJson()) {
+            return redirect()->route('admin.donations.index')->with('status', 'Donation marked as refunded.');
+        }
 
         return response()->json([
             'message' => 'Donation marked as refunded.',

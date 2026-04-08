@@ -8,10 +8,11 @@ use App\Models\Donation;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AdminDashboardController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse|View
     {
         activity()
             ->causedBy($request->user())
@@ -55,7 +56,7 @@ class AdminDashboardController extends Controller
             ->groupBy('type')
             ->get();
 
-        return response()->json([
+        $data = [
             'totals' => [
                 'all_time' => $totalRaisedAllTime,
                 'this_month' => $totalRaisedMonth,
@@ -67,6 +68,12 @@ class AdminDashboardController extends Controller
             'revenue_chart' => $revenueChart,
             'donor_growth_chart' => $donorGrowth,
             'recurring_vs_one_time' => $split,
-        ]);
+        ];
+
+        if ($request->expectsJson()) {
+            return response()->json($data);
+        }
+
+        return view('admin.dashboard', $data);
     }
 }

@@ -9,23 +9,22 @@ use App\Models\Campaign;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class AdminCampaignController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse|View
     {
-        return response()->json(
-            Campaign::query()->with('categories:id,name,slug')->latest()->paginate(20)
-        );
+        $campaigns = Campaign::query()->with('categories:id,name,slug')->latest()->paginate(20);
+
+        if ($request->expectsJson()) {
+            return response()->json($campaigns);
+        }
+
+        return view('admin.campaigns.index', compact('campaigns'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function store(StoreCampaignRequest $request): JsonResponse
+    public function store(StoreCampaignRequest $request): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         $data = $request->validated();
         $data['created_by'] = $request->user()->id;
@@ -39,20 +38,24 @@ class AdminCampaignController extends Controller
             ->event('admin.campaigns.created')
             ->log('Admin created campaign');
 
+        if (! $request->expectsJson()) {
+            return redirect()->route('admin.campaigns.index')->with('status', 'Campaign created successfully.');
+        }
+
         return response()->json($campaign->load('categories'), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Campaign $campaign): JsonResponse
+    public function show(Request $request, Campaign $campaign): JsonResponse|View
     {
-        return response()->json($campaign->load('categories'));
+        $campaign->load('categories');
+
+        if ($request->expectsJson()) {
+            return response()->json($campaign);
+        }
+
+        return response()->json($campaign);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function update(UpdateCampaignRequest $request, Campaign $campaign): JsonResponse
     {
         $data = $request->validated();
@@ -71,10 +74,7 @@ class AdminCampaignController extends Controller
         return response()->json($campaign->load('categories'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Campaign $campaign): JsonResponse
+    public function destroy(Request $request, Campaign $campaign): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         activity()
             ->performedOn($campaign)
@@ -83,10 +83,14 @@ class AdminCampaignController extends Controller
 
         $campaign->delete();
 
+        if (! $request->expectsJson()) {
+            return redirect()->route('admin.campaigns.index')->with('status', 'Campaign deleted.');
+        }
+
         return response()->json(['message' => 'Campaign deleted.']);
     }
 
-    public function duplicate(Campaign $campaign): JsonResponse
+    public function duplicate(Request $request, Campaign $campaign): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         $clone = $campaign->replicate(['slug', 'raised_amount', 'status']);
         $clone->slug = Str::slug($campaign->title.' '.Str::random(6));
@@ -99,6 +103,10 @@ class AdminCampaignController extends Controller
             ->performedOn($clone)
             ->event('admin.campaigns.duplicated')
             ->log('Admin duplicated campaign');
+
+        if (! $request->expectsJson()) {
+            return redirect()->route('admin.campaigns.index')->with('status', 'Campaign duplicated.');
+        }
 
         return response()->json($clone->load('categories'), 201);
     }
