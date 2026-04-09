@@ -6,43 +6,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('donor')->after('email');
             $table->string('phone')->nullable()->after('password');
-            $table->string('address_line_1')->nullable()->after('phone');
-            $table->string('address_line_2')->nullable()->after('address_line_1');
-            $table->string('city')->nullable()->after('address_line_2');
-            $table->string('state')->nullable()->after('city');
-            $table->string('postal_code')->nullable()->after('state');
-            $table->string('country')->nullable()->after('postal_code');
-            $table->json('notification_preferences')->nullable()->after('country');
-
-            $table->index('role');
+            $table->string('address_line_1')->nullable();
+            $table->string('address_line_2')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('country')->nullable();
+            $table->json('notification_preferences')->nullable();
+            $table->string('role')->default('donor')->after('email');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropIndex(['role']);
             $table->dropColumn([
-                'role',
-                'phone',
-                'address_line_1',
-                'address_line_2',
-                'city',
-                'stripe_id',
-                'pm_type',
-                'pm_last_four',
-                'trial_ends_at',
+                'phone', 'address_line_1', 'address_line_2',
+                'city', 'state', 'postal_code', 'country',
+                'notification_preferences', 'role',
             ]);
         });
     }

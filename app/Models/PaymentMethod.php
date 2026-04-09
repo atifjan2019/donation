@@ -10,8 +10,8 @@ class PaymentMethod extends Model
     protected $fillable = [
         'user_id',
         'type',
-        'last_four',
         'token',
+        'last_four',
         'is_default',
     ];
 
